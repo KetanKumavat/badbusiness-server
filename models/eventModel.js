@@ -11,6 +11,21 @@ const eventSchema = new mongoose.Schema({
   venue: { type: String },
   banner: { type: String },
   attendees: { type: Number },
+  listedBy: {
+    type: String,
+    enum: ["individual", "organization"],
+    required: true,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["accepted", "declined", "still processing"],
+    default: "still processing",
+  },
   speakers: [
     {
       name: { type: String },
