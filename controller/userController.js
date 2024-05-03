@@ -18,7 +18,6 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log("Hashed Password:", hashedPassword);
   const user = await User.create({
     username,
     email,
@@ -43,13 +42,13 @@ export const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    // provide access token
     const accessToken = jwt.sign(
       {
         user: {
           username: user.username,
           email: user.email,
           id: user.id,
+          isAdmin: user.isAdmin,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -60,7 +59,10 @@ export const loginUser = asyncHandler(async (req, res) => {
       name: user.username,
       email: user.email,
       id: user._id,
+      isAdmin: user.isAdmin,
     });
+    // console.log("Decoded User:", req.user);
+
   } else {
     res.status(401);
     throw new Error("Email/Password is Invalid");

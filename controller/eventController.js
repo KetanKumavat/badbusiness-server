@@ -106,3 +106,21 @@ export const deleteEvent = async (req, res) => {
   }
 };
 
+export const setStatus = async (req, res) => {
+  const { eventSlug } = req.params;
+  const { status } = req.body;
+  try {
+    const updatedEvent = await Event.findOneAndUpdate(
+      { slug: eventSlug },
+      { status },
+      { new: true }
+    );
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json({ message: "Event status updated successfully", event: updatedEvent });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+}
