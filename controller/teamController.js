@@ -42,18 +42,26 @@ const createTeam = async (req, res) => {
 const updateTeam = async (req, res) => {
   const { id } = req.params;
   const { name, headline, photo, links, isMVP } = req.body;
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res
-      .status(404)
-      .json({ success: false, message: `No team with id: ${id}` });
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res
+        .status(404)
+        .json({ success: false, message: `No team with id: ${id}` });
 
-  const updatedTeam = { name, headline, photo, links, isMVP };
-  await Team.findByIdAndUpdate(id, updatedTeam, { new: true });
-  res.json({
-    success: true,
-    message: "Team updated successfully.",
-    updatedTeam,
-  });
+    const updatedTeam = { name, headline, photo, links, isMVP };
+    await Team.findByIdAndUpdate(id, updatedTeam, {
+      new: true,
+      runValidators: true,
+    });
+    res.json({
+      success: true,
+      message: "Team updated successfully.",
+      updatedTeam,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(404).json({ success: false, message: error.message });
+  }
 };
 
 const deleteTeam = async (req, res) => {

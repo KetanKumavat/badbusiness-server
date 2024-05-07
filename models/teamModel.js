@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const team = new mongoose.Schema(
+const teamSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,9 +27,10 @@ const team = new mongoose.Schema(
             "instagram",
             "github",
             "behance",
-            "dribble",
+            "dribbble",
             "others",
           ],
+          required: true,
         },
         type: { type: String },
       },
@@ -42,5 +43,29 @@ const team = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Team = mongoose.model("Team", team);
+// teamSchema.pre("save", function (next) {
+//   const validIcons = [
+//     "facebook",
+//     "twitter",
+//     "linkedin",
+//     "instagram",
+//     "github",
+//     "behance",
+//     "dribbble",
+//     "others",
+//   ];
+
+//   this.links.forEach((link) => {
+//     console.log(`Checking icon: ${link.icon}`);
+//     if (!validIcons.includes(link.icon)) {
+//       console.log(`Invalid icon: ${link.icon}`);
+//       throw new Error(`Invalid icon: ${link.icon}`);
+//     }
+//   });
+
+//   console.log("All icons are valid");
+//   next();
+// });
+
+const Team = mongoose.model("Team", teamSchema);
 export default Team;
