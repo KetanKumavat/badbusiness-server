@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-const validateToken = asyncHandler(async (req, res, next) => {
+const isUser = asyncHandler(async (req, res, next) => {
   let token;
   let authHeader = req.headers.Authorization || req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
@@ -25,5 +25,4 @@ const validateToken = asyncHandler(async (req, res, next) => {
   }
 });
 
-
-export default validateToken;
+export default isUser;

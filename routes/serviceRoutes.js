@@ -6,15 +6,15 @@ import {
   updateService,
   deleteService,
 } from "../controller/serviceController.js";
-import validateToken from "../middleware/validateTokenHandler.js";
+import isUser from "../middleware/validateTokenHandler.js";
 import isAdmin from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllServices);
 router.get("/:id", getServiceById);
-router.post("/create", validateToken, isAdmin, createService);
-router.put("/:id/update", validateToken, isAdmin, updateService);
-router.delete("/:id/delete", validateToken, isAdmin, deleteService);
+router.post("/create", isUser, isAdmin, createService);
+router.put("/:id/update", isUser, isAdmin, updateService);
+router.delete("/:id/delete", isUser, isAdmin, deleteService);
 
 export default router;

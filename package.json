@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {
