@@ -1,14 +1,11 @@
 import mongoose from "mongoose";
 
-const team = new mongoose.Schema(
+const partner = new mongoose.Schema(
   {
     name: {
       type: String,
     },
     headline: {
-      type: String,
-    },
-    domain: {
       type: String,
     },
     photo: {
@@ -30,5 +27,5 @@ const team = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Team = mongoose.model("Team", team);
-export default Team;
+const Partner = mongoose.model("Partner", partner);
+export default Partner;
