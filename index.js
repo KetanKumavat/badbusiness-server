@@ -16,16 +16,16 @@ const port = process.env.PORT || 3000;
 connectDb();
 
 app.get("/", (req, res) => {
-  res.json({ message: "Server is online." });
+  res.json({ success: true, message: "Server is online." });
 });
 
 app.use(express.json());
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/events", eventRoutes);
+app.use("/api/v1/event", eventRoutes);
 app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/services", serviceRoutes);
-app.use("/api/v1/teams", teamRoutes);
-app.use("/api/v1/partners", partnerRoutes);
+app.use("/api/v1/service", serviceRoutes);
+app.use("/api/v1/team", teamRoutes);
+app.use("/api/v1/partner", partnerRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on Port ${port}`);

@@ -11,8 +11,8 @@ const isUser = asyncHandler(async (req, res, next) => {
     // console.log("Token:", token);
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
-        console.error("Token Verification Error:", err); // Add this line for debugging
-        res.status(401);
+        console.error("Token Verification Error:", err);
+        res.status(401).json({ success: false, message: "Unauthorized User" });
         throw new Error("Unauthorized User");
       }
       req.user = decoded.user;
@@ -20,7 +20,12 @@ const isUser = asyncHandler(async (req, res, next) => {
       next();
     });
   } else {
-    res.status(401);
+    res
+      .status(401)
+      .json({
+        success: false,
+        message: "User is Unauthorized or Missing Token",
+      });
     throw new Error("User is Unauthorized or Missing Token");
   }
 });

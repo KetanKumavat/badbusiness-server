@@ -12,9 +12,11 @@ export const addAdmin = async (req, res) => {
       isAdmin: true,
     });
     await admin.save();
-    res.status(201).json({ message: "Admin added successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "Admin added successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };

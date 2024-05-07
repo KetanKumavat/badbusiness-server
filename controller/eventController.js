@@ -15,11 +15,13 @@ export const getAllEvents = async (req, res) => {
         status: 1,
         createdBy: 1,
       }
-    ).populate("createdBy", "id username email").select("_id title description date time type listedBy status createdBy");
-    res.json(allEvents);
+    )
+      .populate("createdBy", "id username email")
+      .select("_id title description date time type listedBy status createdBy");
+    res.json({ success: true, events: allEvents });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -28,23 +30,29 @@ export const getEventBySlug = async (req, res) => {
     const { slug } = req.params;
     const event = await Event.findOne({ slug })
       .populate("createdBy", "id username email")
-      .select("_id slug title description date time type listedBy status createdBy");
+      .select(
+        "_id slug title description date time type listedBy status createdBy"
+      );
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
     }
-    res.json(event);
+    res.json({ success: true, event });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
 export const createEvent = async (req, res) => {
   const { title, description, date, time, type, listedBy, status } = req.body;
   const userId = req.user.id;
-  
+
   if (!title || !description || !date || !time || !type || !listedBy) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
   }
 
   const slug = title.toLowerCase().replace(/ /g, "-");
@@ -58,18 +66,20 @@ export const createEvent = async (req, res) => {
       type,
       listedBy,
       createdBy: userId,
-      status
+      status,
     });
 
     const populatedEvent = await Event.findById(createdEvent._id)
       .populate("createdBy", "id username email")
       .select("_id title description date time type listedBy status createdBy");
-    res
-      .status(201)
-      .json({ message: "Event added successfully", event: populatedEvent });
+    res.status(201).json({
+      success: true,
+      message: "Event added successfully",
+      event: populatedEvent,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -83,12 +93,18 @@ export const updateEvent = async (req, res) => {
       { new: true }
     );
     if (!updatedEvent) {
-      return res.status(404).json({ message: "Event not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
     }
-    res.json({ message: "Event updated successfully", event: updatedEvent });
+    res.json({
+      success: true,
+      message: "Event updated successfully",
+      event: updatedEvent,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -97,12 +113,16 @@ export const deleteEvent = async (req, res) => {
   try {
     const deletedEvent = await Event.findByIdAndDelete(eventId);
     if (!deletedEvent) {
-      return res.status(404).json({ message: "Event not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
     }
-    res.status(201).json({ message: "Event deleted successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "Event deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -116,11 +136,17 @@ export const setStatus = async (req, res) => {
       { new: true }
     );
     if (!updatedEvent) {
-      return res.status(404).json({ message: "Event not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
     }
-    res.json({ message: "Event status updated successfully", event: updatedEvent });
+    res.json({
+      success: true,
+      message: "Event status updated successfully",
+      event: updatedEvent,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
-}
+};

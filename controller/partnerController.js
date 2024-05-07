@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 const getPartners = async (req, res) => {
   try {
     const partners = await Partner.find();
-    res.status(200).json(partners);
+    res.status(200).json({ success: true, partners });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ success: false, message: error.message });
   }
 };
 
@@ -14,9 +14,9 @@ const getPartnerById = async (req, res) => {
   const { id } = req.params;
   try {
     const partner = await Partner.findById(id);
-    res.status(200).json(partner);
+    res.status(200).json({ success: true, partner });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ success: false, message: error.message });
   }
 };
 
@@ -36,7 +36,7 @@ const createPartner = async (req, res) => {
       .status(201)
       .json({ message: "Partner Created successfully", newPartner });
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    res.status(409).json({ sucess: false, message: error.message });
   }
 };
 
@@ -45,13 +45,19 @@ const updatePartner = async (req, res) => {
   const { name, headline, photo, links, isMVP } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).send(`No partner with id: ${id}`);
+      return res
+        .status(404)
+        .json({ success: false, message: `No partner with that id ${id}` });
     }
     const updatedPartner = { name, headline, photo, links, isMVP };
     await Partner.findByIdAndUpdate(id, updatedPartner, { new: true });
-    res.json({ message: "Partner updated successfully.", updatedPartner });
+    res.json({
+      success: true,
+      message: "Partner updated successfully.",
+      updatedPartner,
+    });
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    res.status(409).json({ sucess: false, message: error.message });
   }
 };
 
@@ -59,13 +65,19 @@ const deletePartner = async (req, res) => {
   const { id } = req.params;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).send(`No partner with id: ${id}`);
+      return res
+        .status(404)
+        .json({
+          success: true,
+          success: false,
+          message: `No partner with id: ${id}`,
+        });
     }
     await Partner.findByIdAndDelete(id);
-    res.json({ message: "Partner deleted successfully." });
+    res.json({ success: true, message: "Partner deleted successfully." });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 

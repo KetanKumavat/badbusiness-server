@@ -5,7 +5,7 @@ const isAdmin = (req, res, next) => {
     return next();
   }
   console.log("User is not admin");
-  return res.status(403).json({ message: "Forbidden" });
+  return res.status(403).json({ success: false, message: "Forbidden" });
 };
 
 export default isAdmin;

@@ -18,7 +18,19 @@ const team = new mongoose.Schema(
       {
         name: { type: String },
         url: { type: String },
-        icon: { type: String },
+        icon: {
+          type: String,
+          enum: [
+            "facebook",
+            "twitter",
+            "linkedin",
+            "instagram",
+            "github",
+            "behance",
+            "dribble",
+            "others",
+          ],
+        },
         type: { type: String },
       },
     ],
