@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 
 const serviceSchema = mongoose.Schema(
   {
-    id: {
-      type: Number,
-    },
     image: {
       type: String,
     },
