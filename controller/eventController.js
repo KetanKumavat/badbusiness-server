@@ -19,7 +19,9 @@ export const getAllEvents = async (req, res) => {
       }
     )
       .populate("createdBy", "id username email")
-      .select("_id title description date time type listedBy status createdBy");
+      .select(
+        "_id title description banner date time type listedBy status createdBy"
+      );
     res.json({ success: true, events: allEvents });
   } catch (err) {
     console.error(err);
@@ -30,11 +32,10 @@ export const getAllEvents = async (req, res) => {
 export const getEventBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    const event = await Event.findOne({ slug })
-      .populate("createdBy", "id username email")
-      .select(
-        "_id slug title description date time type listedBy status createdBy"
-      );
+    const event = await Event.findOne({ slug }).populate(
+      "createdBy",
+      "id username email"
+    );
     if (!event) {
       return res
         .status(404)
