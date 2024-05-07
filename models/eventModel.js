@@ -23,8 +23,8 @@ const eventSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["accepted", "declined", "still processing"],
-    default: "still processing",
+    enum: ["accepted", "declined", "pending"],
+    default: "pending",
   },
   speakers: [
     {
