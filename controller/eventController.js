@@ -6,8 +6,10 @@ export const getAllEvents = async (req, res) => {
       {},
       {
         _id: 1,
+        slug: 1,
         title: 1,
         description: 1,
+        banner: 1,
         date: 1,
         time: 1,
         type: 1,
