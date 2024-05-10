@@ -8,8 +8,9 @@ dotenv.config();
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, password, email } = req.body;
   if (!username || !password || !email) {
-    res.status(400),
-      json({ success: false, message: "All fields are mandatory !" });
+    res
+      .status(400)
+      .json({ success: false, message: "All fields are mandatory !" });
     throw new Error("All fields are mandatory !");
   }
   const userAvailable = await User.findOne({ email });
@@ -81,6 +82,53 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// export const currentUser = asyncHandler(async (req, res) => {
-//   res.json(req.user);
-// });
+export const refreshToken = asyncHandler(async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const refreshToken = authHeader && authHeader.split(" ")[1];
+
+  if (!refreshToken) {
+    res
+      .status(401)
+      .json({ success: false, message: "No refresh token provided" });
+    return;
+  }
+
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    async (err, decoded) => {
+      // console.log("Decoded User:", decoded);
+      // console.log("Error:", err);
+      if (err) {
+        res
+          .status(401)
+          .json({ success: false, message: "Invalid refresh token" });
+        return;
+      }
+
+      const user = await User.findById(decoded.user.id);
+      if (!user) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
+      }
+
+      const refreshToken = jwt.sign(
+        {
+          user: {
+            username: user.username,
+            email: user.email,
+            id: user._id,
+            isAdmin: user.isAdmin,
+          },
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "15m" }
+      );
+      res.status(200).json({
+        success: true,
+        message: "Token refreshed successfully",
+        refreshToken,
+      });
+    }
+  );
+});

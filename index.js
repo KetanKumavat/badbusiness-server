@@ -7,6 +7,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import partnerRoutes from "./routes/partnerRoutes.js";
+
 import cors from "cors";
 
 const app = express();
