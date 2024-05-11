@@ -89,10 +89,10 @@ export const refreshToken = asyncHandler(async (req, res) => {
     res.status(400).json({ success: false, message: "Email is required" });
     return;
   }
-  console.log("Email:", email);
-  console.log("User Email:", req.user.email);
+  // console.log("Email:", email);
+  // console.log("User Email:", req.user.email);
   if (email !== req.user.email) {
-    res.status(403).json({ success: false, message: "Unauthorized" });
+    res.status(403).json({ success: false, message: "Unauthorized User" });
     return;
   }
 
@@ -115,7 +115,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
 
   jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET,
     async (err, decoded) => {
       if (err) {
         res
@@ -133,7 +133,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
             isAdmin: user.isAdmin,
           },
         },
-        process.env.REFRESH_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "15m" }
       );
       res.status(200).json({
