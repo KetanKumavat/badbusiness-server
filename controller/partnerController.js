@@ -50,7 +50,10 @@ const updatePartner = async (req, res) => {
         .json({ success: false, message: `No partner with that id ${id}` });
     }
     const updatedPartner = { name, headline, photo, links, isMVP };
-    await Partner.findByIdAndUpdate(id, updatedPartner, { new: true });
+    await Partner.findByIdAndUpdate(id, updatedPartner, {
+      new: true,
+      runValidators: true,
+    });
     res.json({
       success: true,
       message: "Partner updated successfully.",
@@ -65,13 +68,11 @@ const deletePartner = async (req, res) => {
   const { id } = req.params;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(404)
-        .json({
-          success: true,
-          success: false,
-          message: `No partner with id: ${id}`,
-        });
+      return res.status(404).json({
+        success: true,
+        success: false,
+        message: `No partner with id: ${id}`,
+      });
     }
     await Partner.findByIdAndDelete(id);
     res.json({ success: true, message: "Partner deleted successfully." });

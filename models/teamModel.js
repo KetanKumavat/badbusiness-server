@@ -32,7 +32,12 @@ const teamSchema = new mongoose.Schema(
           ],
           required: true,
         },
-        type: { type: String },
+        type: {
+          type: String,
+          enum: ["internal", "external"],
+          default: "external",
+          required: true,
+        },
       },
     ],
     isMVP: {

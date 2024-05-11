@@ -15,8 +15,26 @@ const partner = new mongoose.Schema(
       {
         name: { type: String },
         url: { type: String },
-        icon: { type: String },
-        type: { type: String },
+        icon: {
+          type: String,
+          enum: [
+            "facebook",
+            "twitter",
+            "linkedin",
+            "instagram",
+            "github",
+            "behance",
+            "dribbble",
+            "others",
+          ],
+          required: true,
+        },
+        type: {
+          type: String,
+          enum: ["internal", "external"],
+          default: "external",
+          required: true,
+        },
       },
     ],
     isMVP: {
