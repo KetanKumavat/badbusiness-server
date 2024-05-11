@@ -83,6 +83,26 @@ export const loginUser = asyncHandler(async (req, res) => {
 });
 
 export const refreshToken = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(400).json({ success: false, message: "Email is required" });
+    return;
+  }
+  console.log("Email:", email);
+  console.log("User Email:", req.user.email);
+  if (email !== req.user.email) {
+    res.status(403).json({ success: false, message: "Unauthorized" });
+    return;
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(404).json({ success: false, message: "User not found" });
+    return;
+  }
+
   const authHeader = req.headers["authorization"];
   const refreshToken = authHeader && authHeader.split(" ")[1];
 
@@ -97,8 +117,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
-      // console.log("Decoded User:", decoded);
-      // console.log("Error:", err);
       if (err) {
         res
           .status(401)
@@ -106,28 +124,23 @@ export const refreshToken = asyncHandler(async (req, res) => {
         return;
       }
 
-      const user = await User.findById(decoded.user.id);
-      if (!user) {
-        res.status(404).json({ success: false, message: "User not found" });
-        return;
-      }
-
-      const refreshToken = jwt.sign(
+      const newRefreshToken = jwt.sign(
         {
           user: {
             username: user.username,
             email: user.email,
-            id: user._id,
+            id: user.id,
             isAdmin: user.isAdmin,
           },
         },
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "15m" }
       );
       res.status(200).json({
         success: true,
         message: "Token refreshed successfully",
-        refreshToken,
+        // user,
+        refreshToken: newRefreshToken,
       });
     }
   );
