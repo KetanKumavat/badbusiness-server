@@ -7,6 +7,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import partnerRoutes from "./routes/partnerRoutes.js";
+import storyRoutes from "./routes/storyRoutes.js";
 
 import cors from "cors";
 
@@ -30,6 +31,7 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/service", serviceRoutes);
 app.use("/api/v1/team", teamRoutes);
 app.use("/api/v1/partner", partnerRoutes);
+app.use("/api/v1/story", storyRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on Port ${port}`);
