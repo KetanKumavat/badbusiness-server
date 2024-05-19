@@ -49,10 +49,22 @@ export const getEventBySlug = async (req, res) => {
 };
 
 export const createEvent = async (req, res) => {
-  const { title, description, date, time, type, listedBy, status } = req.body;
+  const {
+    title,
+    description,
+    date,
+    time,
+    platform,
+    venue,
+    type,
+    sponsor,
+    hosts,
+    speakers,
+    banner,
+  } = req.body;
   const userId = req.user.id;
 
-  if (!title || !description || !date || !time || !type || !listedBy) {
+  if (!title || !description || !date || !time || !type) {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
@@ -67,9 +79,14 @@ export const createEvent = async (req, res) => {
       date,
       time,
       type,
-      listedBy,
+      listedBy: userId,
       createdBy: userId,
-      status,
+      sponsor,
+      hosts,
+      speakers,
+      banner,
+      venue,
+      platform,
     });
 
     const populatedEvent = await Event.findById(createdEvent._id)
@@ -88,11 +105,40 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
   const { eventId } = req.params;
-  const { title, description, date, time, type, listedBy, status } = req.body;
+  const {
+    title,
+    description,
+    date,
+    time,
+    platform,
+    venue,
+    type,
+    sponsor,
+    hosts,
+    speakers,
+    banner,
+  } = req.body;
+
+  const userId = req.user.id;
+
   try {
     const updatedEvent = await Event.findByIdAndUpdate(
       eventId,
-      { title, description, date, time, type, listedBy, status },
+      {
+        title,
+        description,
+        date,
+        time,
+        type,
+        listedBy: userId,
+        createdBy: userId,
+        sponsor,
+        hosts,
+        speakers,
+        banner,
+        venue,
+        platform,
+      },
       { new: true }
     );
     if (!updatedEvent) {
