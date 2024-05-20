@@ -3,7 +3,7 @@ import Story from "../models/storyModel.js";
 export const getStories = async (req, res) => {
   try {
     const stories = await Story.find();
-    res.status(200).json({ success: false, stories });
+    res.status(200).json({ success: true, stories });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Cannot Get Stories" });
