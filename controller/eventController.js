@@ -61,6 +61,7 @@ export const createEvent = async (req, res) => {
     hosts,
     speakers,
     banner,
+    listedBy,
   } = req.body;
   const userId = req.user.id;
 
@@ -79,7 +80,7 @@ export const createEvent = async (req, res) => {
       date,
       time,
       type,
-      listedBy: userId,
+      listedBy,
       createdBy: userId,
       sponsor,
       hosts,
