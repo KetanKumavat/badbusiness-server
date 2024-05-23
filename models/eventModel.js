@@ -26,12 +26,10 @@ const eventSchema = new mongoose.Schema({
   listedBy: {
     type: String,
     enum: ["individual", "organization"],
-    required: true,
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
   status: {
     type: String,
