@@ -36,12 +36,20 @@ export const getEventBySlug = async (req, res) => {
       "createdBy",
       "id username email"
     );
+    const attendeesCount = event.attendees.length;
+    const eventWithAttendeesCount = {
+      ...event._doc,
+      attendees: attendeesCount,
+    };
     if (!event) {
       return res
         .status(404)
         .json({ success: false, message: "Event not found" });
     }
-    res.json({ success: true, event });
+    res.json({
+      success: true,
+      event: eventWithAttendeesCount,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server Error" });
