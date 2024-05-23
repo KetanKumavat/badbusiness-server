@@ -7,13 +7,15 @@ import {
   deleteEvent,
   setStatus,
   registerForEvent,
+  getFilteredEvents,
 } from "../controller/eventController.js";
 import isUser from "../middleware/validateTokenHandler.js";
 import isAdmin from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getAllEvents);
+router.get("/", getFilteredEvents);
+router.get("/all", getAllEvents);
 router.get("/:slug", getEventBySlug);
 router.post("/create", isUser, createEvent);
 router.put("/update/:eventId", isUser, updateEvent);

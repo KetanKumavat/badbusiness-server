@@ -1,5 +1,35 @@
 import Event from "../models/eventModel.js";
 
+export const getFilteredEvents = async (req, res) => {
+  //sending only events with status accepted
+  try {
+    const filteredEvents = await Event.find(
+      { status: "accepted" },
+      {
+        _id: 1,
+        slug: 1,
+        title: 1,
+        description: 1,
+        banner: 1,
+        date: 1,
+        time: 1,
+        type: 1,
+        listedBy: 1,
+        status: 1,
+        createdBy: 1,
+      }
+    )
+      .populate("createdBy", "id username email")
+      .select(
+        "_id title description banner date time type listedBy status createdBy"
+      );
+    res.json({ success: true, events: filteredEvents });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 export const getAllEvents = async (req, res) => {
   try {
     const allEvents = await Event.find(
