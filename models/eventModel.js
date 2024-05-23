@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+const attendeeSchema = new mongoose.Schema({
+  attendeeName: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: Number, required: true },
+  attendeeType: {
+    type: String,
+    required: true,
+    enum: ["institute", "organization"],
+  },
+  typeName: { type: String, required: true },
+});
+
 const eventSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   title: { type: String, required: true },
@@ -10,19 +22,7 @@ const eventSchema = new mongoose.Schema({
   platform: { type: String },
   venue: { type: String },
   banner: { type: String },
-  attendees: [
-    {
-      attendeeName: { type: String, required: true },
-      email: { type: String, required: true },
-      phone: { type: Number, required: true },
-      attendeeType: {
-        type: String,
-        required: true,
-        enum: ["institute", "organization"],
-      },
-      typeName: { type: String, required: true },
-    },
-  ],
+  attendees: [attendeeSchema],
   listedBy: {
     type: String,
     enum: ["individual", "organization"],

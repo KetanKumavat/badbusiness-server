@@ -212,13 +212,17 @@ export const setStatus = async (req, res) => {
 export const registerForEvent = async (req, res) => {
   const { eventSlug } = req.params;
   const { attendeeName, email, phone, attendeeType, typeName } = req.body;
+
   try {
     const event = await Event.findOne({ slug: eventSlug });
+
     if (!event) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Event not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Event not found",
+      });
     }
+
     const newAttendee = {
       attendeeName,
       email,
@@ -226,8 +230,10 @@ export const registerForEvent = async (req, res) => {
       attendeeType,
       typeName,
     };
+
     event.attendees.push(newAttendee);
     await event.save();
+
     res.status(201).json({
       success: true,
       message: "Registered successfully",
@@ -235,6 +241,9 @@ export const registerForEvent = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
