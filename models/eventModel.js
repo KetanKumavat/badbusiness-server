@@ -10,7 +10,19 @@ const eventSchema = new mongoose.Schema({
   platform: { type: String },
   venue: { type: String },
   banner: { type: String },
-  attendees: { type: Number },
+  attendees: [
+    {
+      attendeeName: { type: String, required: true },
+      email: { type: String, required: true },
+      phone: { type: Number, required: true },
+      attendeeType: {
+        type: String,
+        required: true,
+        enum: ["institute", "organization"],
+      },
+      typeName: { type: String, required: true },
+    },
+  ],
   listedBy: {
     type: String,
     enum: ["individual", "organization"],

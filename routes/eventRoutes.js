@@ -6,6 +6,7 @@ import {
   updateEvent,
   deleteEvent,
   setStatus,
+  registerForEvent,
 } from "../controller/eventController.js";
 import isUser from "../middleware/validateTokenHandler.js";
 import isAdmin from "../middleware/adminMiddleware.js";
@@ -15,8 +16,9 @@ const router = express.Router();
 router.get("/", getAllEvents);
 router.get("/:slug", getEventBySlug);
 router.post("/create", isUser, createEvent);
-router.put("/:eventId/update", isUser, updateEvent);
-router.delete("/:eventId/delete", isUser, deleteEvent);
-router.put("/:eventSlug/status", isUser, isAdmin, setStatus);
+router.put("/update/:eventId", isUser, updateEvent);
+router.delete("/delete/:eventId", isUser, deleteEvent);
+router.put("/status/:eventSlug", isUser, isAdmin, setStatus);
+router.post("/register/:eventSlug", registerForEvent);
 
 export default router;
