@@ -253,6 +253,13 @@ export const registerForEvent = async (req, res) => {
       });
     }
 
+    if (event.status !== "accepted") {
+      return res.status(400).json({
+        success: false,
+        message: "Event is not open for registration yet",
+      });
+    }
+
     const newAttendee = {
       attendeeName,
       email,
