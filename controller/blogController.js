@@ -11,7 +11,8 @@ export const getAllBlogs = async (req, res) => {
 
 export const getBlogs = async (req, res) => {
   try {
-    let blogs = await Blog.find().select("headline title banner content");
+    let blogs = await Blog.find();
+    console.log("Blogs from DB:", blogs);
     blogs = blogs.map((blog) => {
       const content = blog.content.find((item) => item.type === "paragraph");
       return {
@@ -26,9 +27,9 @@ export const getBlogs = async (req, res) => {
 };
 
 export const getBlogBySlug = async (req, res) => {
-  const { slug } = req.params;
+  const { id } = req.params;
   try {
-    const blog = await Blog.findOne({ slug });
+    const blog = await Blog.findById(id);
     if (!blog) {
       return res
         .status(404)
