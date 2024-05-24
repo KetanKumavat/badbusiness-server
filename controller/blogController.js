@@ -12,7 +12,6 @@ export const getAllBlogs = async (req, res) => {
 export const getBlogs = async (req, res) => {
   try {
     let blogs = await Blog.find();
-    console.log("Blogs from DB:", blogs);
     blogs = blogs.map((blog) => {
       const content = blog.content.find((item) => item.type === "paragraph");
       return {
