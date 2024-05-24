@@ -240,6 +240,7 @@ export const setStatus = async (req, res) => {
 };
 
 export const registerForEvent = async (req, res) => {
+  console.log(new Date());
   const { eventSlug } = req.params;
   const { attendeeName, email, phone, attendeeType, typeName } = req.body;
 
@@ -257,6 +258,20 @@ export const registerForEvent = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Event is not open for registration yet",
+      });
+    }
+
+    if (event.date < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Event has already passed",
+      });
+    }
+
+    if (event.time < new Date.getTime()) {
+      return res.status(400).json({
+        success: false,
+        message: "Event has already started",
       });
     }
 

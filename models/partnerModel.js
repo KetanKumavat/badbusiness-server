@@ -37,6 +37,11 @@ const partner = new mongoose.Schema(
         },
       },
     ],
+    type: {
+      type: String,
+      enum: ["commercial", "educational"],
+      required: true,
+    },
     isMVP: {
       type: Boolean,
       default: false,
