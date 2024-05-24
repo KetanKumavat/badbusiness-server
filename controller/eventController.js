@@ -1,3 +1,4 @@
+import { log } from "console";
 import Event from "../models/eventModel.js";
 
 export const getFilteredEvents = async (req, res) => {
@@ -240,7 +241,8 @@ export const setStatus = async (req, res) => {
 };
 
 export const registerForEvent = async (req, res) => {
-  console.log(new Date());
+  console.log("current date", new Date());
+  console.log(new Date().getHours());
   const { eventSlug } = req.params;
   const { attendeeName, email, phone, attendeeType, typeName } = req.body;
 
@@ -261,17 +263,26 @@ export const registerForEvent = async (req, res) => {
       });
     }
 
-    if (event.date < new Date()) {
+    const currentTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    const eventTime = new Date(
+      `${event.date}T${event.time}:00Z`
+    ).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    if (new Date(currentTime) >= new Date(eventTime)) {
       return res.status(400).json({
         success: false,
-        message: "Event has already passed",
+        message:
+          "Event has already passed. You cannot register for this event.",
       });
     }
 
-    if (event.time < new Date.getTime()) {
+    if (new Date().getDate() >= new Date(eventTime).getDate()) {
       return res.status(400).json({
         success: false,
-        message: "Event has already started",
+        message:
+          "Event has already started. You cannot register for this event.",
       });
     }
 
