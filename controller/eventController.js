@@ -145,6 +145,7 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
   const { eventId } = req.params;
+  // console.log("event id", eventId);
   const {
     title,
     description,
@@ -160,32 +161,59 @@ export const updateEvent = async (req, res) => {
   } = req.body;
 
   const userId = req.user.id;
+  let updatedEvent;
 
   try {
-    const updatedEvent = await Event.findByIdAndUpdate(
-      eventId,
-      {
-        title,
-        description,
-        date,
-        time,
-        type,
-        listedBy: userId,
-        createdBy: userId,
-        sponsor,
-        hosts,
-        speakers,
-        banner,
-        venue,
-        platform,
-      },
-      { new: true }
-    );
+    if (title && title.length > 0) {
+      const slug = title.toLowerCase().replace(/ /g, "-");
+      updatedEvent = await Event.findByIdAndUpdate(
+        eventId,
+        {
+          title,
+          description,
+          date,
+          time,
+          type,
+          listedBy: userId,
+          createdBy: userId,
+          sponsor,
+          hosts,
+          speakers,
+          banner,
+          venue,
+          platform,
+          slug,
+        },
+        { new: true }
+      );
+    } else {
+      updatedEvent = await Event.findByIdAndUpdate(
+        eventId,
+        {
+          title,
+          description,
+          date,
+          time,
+          type,
+          listedBy: userId,
+          createdBy: userId,
+          sponsor,
+          hosts,
+          speakers,
+          banner,
+          venue,
+          platform,
+        },
+        { new: true }
+      );
+    }
+
     if (!updatedEvent) {
       return res
         .status(404)
         .json({ success: false, message: "Event not found" });
     }
+
     res.json({
       success: true,
       message: "Event updated successfully",
