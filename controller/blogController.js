@@ -42,14 +42,14 @@ export const getBlogBySlug = async (req, res) => {
 };
 
 export const createBlog = async (req, res) => {
-  const { headline, title, banner, content } = req.body;
+  const { title, banner, content } = req.body;
   const slug = title.toLowerCase().replace(/ /g, "-");
   try {
-    const newBlog = new Blog({ headline, title, slug, banner, content });
-    if (headline.length > 30) {
+    const newBlog = new Blog({ title, slug, banner, content });
+    if (title.length > 30) {
       return res.status(400).json({
         success: false,
-        message: "Headline should not exceed 30 characters",
+        message: "Title should not exceed 30 characters",
       });
     }
     await newBlog.save();
@@ -65,7 +65,7 @@ export const createBlog = async (req, res) => {
 
 export const updateBlog = async (req, res) => {
   const { id } = req.params;
-  const { headline, title, banner, content } = req.body;
+  const { title, banner, content } = req.body;
   let updatedBlog;
 
   try {
@@ -73,13 +73,13 @@ export const updateBlog = async (req, res) => {
       const slug = title.toLowerCase().replace(/ /g, "-");
       updatedBlog = await Blog.findByIdAndUpdate(
         id,
-        { headline, title, slug, banner, content },
+        { title, slug, banner, content },
         { new: true, runValidators: true }
       );
     } else {
       updatedBlog = await Blog.findByIdAndUpdate(
         id,
-        { headline, title, banner, content },
+        { title, banner, content },
         { new: true, runValidators: true }
       );
     }
