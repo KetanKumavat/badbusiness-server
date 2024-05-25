@@ -66,18 +66,30 @@ export const createBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
   const { id } = req.params;
   const { headline, title, banner, content } = req.body;
-  const slug = title.toLowerCase().replace(/ /g, "-");
+  let updatedBlog;
+
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      id,
-      { headline, title, slug, banner, content },
-      { new: true, runValidators: true }
-    );
+    if (title && title.length > 0) {
+      const slug = title.toLowerCase().replace(/ /g, "-");
+      updatedBlog = await Blog.findByIdAndUpdate(
+        id,
+        { headline, title, slug, banner, content },
+        { new: true, runValidators: true }
+      );
+    } else {
+      updatedBlog = await Blog.findByIdAndUpdate(
+        id,
+        { headline, title, banner, content },
+        { new: true, runValidators: true }
+      );
+    }
+
     if (!updatedBlog) {
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
     }
+
     res.status(200).json({
       success: true,
       message: "Blog Updated Successfully",
