@@ -3,6 +3,8 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
+
 dotenv.config();
 
 export const registerUser = asyncHandler(async (req, res) => {
@@ -144,4 +146,83 @@ export const refreshToken = asyncHandler(async (req, res) => {
       });
     }
   );
+});
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email, username } = req.body;
+  if (!email || !username) {
+    res
+      .status(400)
+      .json({ success: false, message: "Email and Username is required" });
+    return;
+  }
+  const user = await User.findOne({ email, username });
+
+  if (!user) {
+    res.status(404).json({ success: false, message: "User not found" });
+    return;
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+
+  user.resetPasswordOtp = otp;
+  user.resetPasswordOtpExpires = Date.now() + 50000;
+
+  await user.save();
+
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.PUBLIC_EMAIL,
+      pass: process.env.PUBLIC_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    to: user.email,
+    from: process.env.PUBLIC_EMAIL,
+    subject: "Password Reset OTP",
+    html: `
+    <h3>Password Reset OTP</h3>
+    <p>You are receiving this email because you (or someone else) have requested the reset of a password.</p>
+    <p>Your OTP for password reset is <strong>${otp}</strong>. This OTP is valid for 5 minutes.</p>
+    <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+  `,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Email could not be sent" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `OTP sent to ${user.email}`,
+    });
+  });
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { username, email, otp, newPassword } = req.body;
+
+  const user = await User.findOne({ email, username, resetPasswordOtp: otp });
+
+  if (!user) {
+    res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  user.resetPasswordOtp = undefined;
+  user.resetPasswordOtpExpires = undefined;
+
+  await user.save();
+
+  res
+    .status(200)
+    .json({ success: true, message: "Password reset successfully" });
 });
