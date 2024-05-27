@@ -43,8 +43,14 @@ export const getBlogBySlug = async (req, res) => {
 
 export const createBlog = async (req, res) => {
   const { title, banner, content } = req.body;
-  const slug = title.toLowerCase().replace(/ /g, "-");
+  if (!title || !banner || !content) {
+    return res.status(400).json({
+      success: false,
+      message: "Please fill all the fields",
+    });
+  }
   try {
+    const slug = title.toLowerCase().replace(/ /g, "-");
     const newBlog = new Blog({ title, slug, banner, content });
     if (title.length > 30) {
       return res.status(400).json({
@@ -67,7 +73,6 @@ export const updateBlog = async (req, res) => {
   const { id } = req.params;
   const { title, banner, content } = req.body;
   let updatedBlog;
-
   try {
     if (title && title.length > 0) {
       const slug = title.toLowerCase().replace(/ /g, "-");
