@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import { log } from "console";
 
 export const addAdmin = async (req, res) => {
   const { username, email, password } = req.body;
@@ -155,5 +156,47 @@ export const getAllAdmins = async (req, res) => {
     res.status(200).json({ success: true, admins });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const makeAdmin = async (req, res) => {
+  const { username } = req.params;
+  const { userEmail, password } = req.body;
+  if (!userEmail || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide your email and password",
+    });
+  }
+  try {
+    const user = await User.findOne({ email: userEmail });
+    if (!user || !user.isAdmin) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Unauthorised User" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+    const nonAdminUser = await User.findOne({ username });
+    // log(nonAdminUser);
+    if (!nonAdminUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    nonAdminUser.isAdmin = true;
+    await nonAdminUser.save();
+    res.status(200).json({
+      success: true,
+      message: "Admin rights granted successfully",
+      user: nonAdminUser,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
