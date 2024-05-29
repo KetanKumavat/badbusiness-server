@@ -226,3 +226,31 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .status(200)
     .json({ success: true, message: "Password reset successfully" });
 });
+
+export const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).select("-password");
+  if (user) {
+    res.status(200).json({
+      success: true,
+      message: "User Profile Fetched Successfully",
+      user,
+    });
+  } else {
+    res.status(404).json({ success: false, message: "User not found" });
+    throw new Error("User not found");
+  }
+});
+
+// export const allUsers = asyncHandler(async (req, res) => {
+//   const users = await User.find({});
+//   if (users) {
+//     res.status(200).json({
+//       success: true,
+//       message: "All Users Fetched Successfully",
+//       users,
+//     });
+//   } else {
+//     res.status(404).json({ success: false, message: "Users not found" });
+//     throw new Error("Users not found");
+//   }
+// });

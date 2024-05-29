@@ -5,6 +5,7 @@ import {
   refreshToken,
   forgotPassword,
   resetPassword,
+  getUserProfile,
 } from "../controller/userController.js";
 import isUser from "../middleware/validateTokenHandler.js";
 const router = express.Router();
@@ -18,4 +19,7 @@ router.post("/refresh", isUser, refreshToken);
 router.post("/forgotpassword", forgotPassword);
 
 router.post("/resetpassword", resetPassword);
+
+router.get("/profile", isUser, getUserProfile);
+
 export default router;
