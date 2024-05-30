@@ -27,9 +27,9 @@ export const getServiceById = async (req, res) => {
 };
 
 export const createService = async (req, res) => {
-  const { title, image, category } = req.body;
+  const { title, image, category, description } = req.body;
 
-  if (!title || !category) {
+  if (!title || !category || !description) {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
@@ -40,6 +40,7 @@ export const createService = async (req, res) => {
       title,
       image,
       category,
+      description,
     });
     res.json({
       success: true,
@@ -54,7 +55,7 @@ export const createService = async (req, res) => {
 
 export const updateService = async (req, res) => {
   const { id } = req.params;
-  const { title, image, category } = req.body;
+  const { title, image, category, description } = req.body;
   try {
     const updatedService = { title, image, category };
     await Service.findByIdAndUpdate(id, updatedService, { new: true });
