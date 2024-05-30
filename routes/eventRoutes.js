@@ -21,6 +21,6 @@ router.post("/create", isUser, createEvent);
 router.put("/update/:eventId", isUser, updateEvent);
 router.delete("/delete/:eventId", isUser, deleteEvent);
 router.put("/status/:eventSlug", isUser, isAdmin, setStatus);
-router.put("/register/:eventSlug", registerForEvent);
+router.put("/register/:eventSlug", isUser, registerForEvent);
 
 export default router;

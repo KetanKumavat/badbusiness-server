@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const userSchema = mongoose.Schema(
   {
@@ -22,6 +23,7 @@ const userSchema = mongoose.Schema(
     },
     resetPasswordOtp: { type: String },
     resetPasswordOtpExpires: { type: Date },
+    eventsAttended: { type: Array, default: [] },
   },
   {
     timestamps: true,

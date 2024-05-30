@@ -1,5 +1,5 @@
-import { log } from "console";
 import Event from "../models/eventModel.js";
+import User from "../models/userModel.js";
 
 export const getFilteredEvents = async (req, res) => {
   //sending only events with status accepted
@@ -154,6 +154,7 @@ export const updateEvent = async (req, res) => {
     platform,
     venue,
     type,
+    listedBy,
     sponsor,
     hosts,
     speakers,
@@ -174,7 +175,7 @@ export const updateEvent = async (req, res) => {
           date,
           time,
           type,
-          listedBy: userId,
+          listedBy,
           createdBy: userId,
           sponsor,
           hosts,
@@ -195,7 +196,7 @@ export const updateEvent = async (req, res) => {
           date,
           time,
           type,
-          listedBy: userId,
+          listedBy,
           createdBy: userId,
           sponsor,
           hosts,
@@ -269,10 +270,11 @@ export const setStatus = async (req, res) => {
 };
 
 export const registerForEvent = async (req, res) => {
-  console.log("current date", new Date());
-  console.log(new Date().getHours());
+  // console.log("current date", new Date());
+  // console.log(new Date().getHours());
   const { eventSlug } = req.params;
   const { attendeeName, email, phone, attendeeType, typeName } = req.body;
+  const userId = req.user.id;
 
   try {
     const event = await Event.findOne({ slug: eventSlug });
@@ -324,6 +326,18 @@ export const registerForEvent = async (req, res) => {
 
     event.attendees.push(newAttendee);
     await event.save();
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    if (user) {
+      user.eventsAttended.push(event._id);
+      await user.save();
+    }
 
     res.status(201).json({
       success: true,
