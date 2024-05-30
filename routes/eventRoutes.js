@@ -8,7 +8,6 @@ import {
   setStatus,
   registerForEvent,
   getFilteredEvents,
-  eventsAttendedByUser,
 } from "../controller/eventController.js";
 import isUser from "../middleware/validateTokenHandler.js";
 import isAdmin from "../middleware/adminMiddleware.js";
@@ -23,6 +22,5 @@ router.put("/update/:eventId", isUser, updateEvent);
 router.delete("/delete/:eventId", isUser, deleteEvent);
 router.put("/status/:eventSlug", isUser, isAdmin, setStatus);
 router.put("/register/:eventSlug", isUser, registerForEvent);
-router.get("/:userId/events-attended", isUser, eventsAttendedByUser);
 
 export default router;

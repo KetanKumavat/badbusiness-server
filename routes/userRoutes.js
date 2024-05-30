@@ -7,6 +7,7 @@ import {
   resetPassword,
   getUserProfile,
 } from "../controller/userController.js";
+import { eventsAttendedByUser } from "../controller/eventController.js";
 import isUser from "../middleware/validateTokenHandler.js";
 const router = express.Router();
 
@@ -21,5 +22,7 @@ router.post("/forgotpassword", forgotPassword);
 router.post("/resetpassword", resetPassword);
 
 router.get("/profile", isUser, getUserProfile);
+
+router.get("/:userId/events-attended", isUser, eventsAttendedByUser);
 
 export default router;
