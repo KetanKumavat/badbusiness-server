@@ -1,5 +1,6 @@
 import Event from "../models/eventModel.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 export const getFilteredEvents = async (req, res) => {
   //sending only events with status accepted
@@ -60,23 +61,30 @@ export const getAllEvents = async (req, res) => {
   }
 };
 
-export const getEventBySlug = async (req, res) => {
+export const getEventBySlugOrId = async (req, res) => {
   try {
-    const { slug } = req.params;
-    const event = await Event.findOne({ slug }).populate(
+    const { slugOrId } = req.params;
+    const query = mongoose.Types.ObjectId.isValid(slugOrId)
+      ? { _id: slugOrId }
+      : { slug: slugOrId };
+
+    const event = await Event.findOne(query).populate(
       "createdBy",
       "id username email"
     );
-    const attendeesCount = event.attendees.length;
-    const eventWithAttendeesCount = {
-      ...event._doc,
-      attendees: attendeesCount,
-    };
+
     if (!event) {
       return res
         .status(404)
         .json({ success: false, message: "Event not found" });
     }
+
+    const attendeesCount = event.attendees.length;
+    const eventWithAttendeesCount = {
+      ...event._doc,
+      attendees: attendeesCount,
+    };
+
     res.json({
       success: true,
       event: eventWithAttendeesCount,
@@ -355,9 +363,10 @@ export const registerForEvent = async (req, res) => {
 
 export const eventsAttendedByUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).populate(
-      "eventsAttended"
-    );
+    const user = await User.findById(req.params.userId).populate({
+      path: "eventsAttended",
+      select: "_id title description date time type listedBy status createdBy",
+    });
     if (!user) {
       return res
         .status(404)

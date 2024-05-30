@@ -1,7 +1,7 @@
 import express from "express";
 import {
   getAllEvents,
-  getEventBySlug,
+  getEventBySlugOrId,
   createEvent,
   updateEvent,
   deleteEvent,
@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.get("/", getFilteredEvents);
 router.get("/all", getAllEvents);
-router.get("/:slug", getEventBySlug);
+router.get("/:slugOrId", getEventBySlugOrId);
 router.post("/create", isUser, createEvent);
 router.put("/update/:eventId", isUser, updateEvent);
 router.delete("/delete/:eventId", isUser, deleteEvent);
