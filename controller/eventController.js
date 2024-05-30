@@ -352,3 +352,19 @@ export const registerForEvent = async (req, res) => {
     });
   }
 };
+
+export const eventsAttendedByUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate(
+      "eventsAttended"
+    );
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json(user.eventsAttended);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
