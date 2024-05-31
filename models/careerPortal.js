@@ -26,6 +26,38 @@ const careerPortalSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  applications: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
+      country: {
+        type: String,
+      },
+      resume: {
+        type: String,
+        required: true,
+      },
+      links: [
+        {
+          type: String,
+        },
+      ],
+    },
+  ],
+  category: {
+    type: String,
+    required: true,
+  },
   datePosted: {
     type: Date,
     default: Date.now,
