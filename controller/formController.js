@@ -1,9 +1,16 @@
 import Form from "../models/formModel.js";
 
 export const submitForm = async (req, res) => {
-  const { name, email, companyName, problem, domain } = req.body;
+  const { name, email, phone, companyName, problem, domain } = req.body;
 
-  const newForm = new Form({ name, email, companyName, problem, domain });
+  const newForm = new Form({
+    name,
+    email,
+    phone,
+    companyName,
+    problem,
+    domain,
+  });
 
   try {
     await newForm.save();
