@@ -10,6 +10,7 @@ import partnerRoutes from "./routes/partnerRoutes.js";
 import storyRoutes from "./routes/storyRoutes.js";
 import HoFRoutes from "./routes/HoFRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
+import formRoutes from "./routes/formRoutes.js";
 
 import cors from "cors";
 
@@ -36,6 +37,7 @@ app.use("/api/v1/partner", partnerRoutes);
 app.use("/api/v1/story", storyRoutes);
 app.use("/api/v1/hof", HoFRoutes);
 app.use("/api/v1/blog", blogRoutes);
+app.use("/api/v1/form", formRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on Port ${port}`);
