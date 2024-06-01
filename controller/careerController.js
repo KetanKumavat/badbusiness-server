@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 export const getCareers = async (req, res) => {
   try {
     const careers = await CareerPortal.find().select(
-      "jobTitle jobLocation jobType category link logo stipend "
+      "jobTitle jobLocation jobType category link logo stipend datePosted"
     );
     res.status(200).json({ success: true, careers });
   } catch (error) {
@@ -31,7 +31,7 @@ export const getCareerByCategory = async (req, res) => {
   try {
     const careers = await CareerPortal.find({
       category: category.toLowerCase(),
-    }).select("jobTitle jobLocation jobType link logo stipend category");
+    }).select("jobTitle jobLocation jobType link logo stipend category datePosted");
     res.status(200).json({ success: true, careers });
   } catch (error) {
     res.status(404).json({ success: false, message: error.message });
