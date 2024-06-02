@@ -5,7 +5,6 @@ const blogSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      maxLength: 30,
     },
     slug: {
       type: String,
