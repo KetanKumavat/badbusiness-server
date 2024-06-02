@@ -21,7 +21,7 @@ const getPartnerById = async (req, res) => {
 };
 
 const createPartner = async (req, res) => {
-  const { id, name, headline, photo, links, isMVP } = req.body;
+  const { id, name, headline, photo, links, isMVP ,type} = req.body;
   const newPartner = new Partner({
     id,
     name,
@@ -29,6 +29,7 @@ const createPartner = async (req, res) => {
     photo,
     links,
     isMVP,
+    type
   });
   try {
     await newPartner.save();
@@ -36,20 +37,20 @@ const createPartner = async (req, res) => {
       .status(201)
       .json({ message: "Partner Created successfully", newPartner });
   } catch (error) {
-    res.status(409).json({ sucess: false, message: error.message });
+    res.status(409).json({ success: false, message: error.message });
   }
 };
 
 const updatePartner = async (req, res) => {
   const { id } = req.params;
-  const { name, headline, photo, links, isMVP } = req.body;
+  const { name, headline, photo, links, isMVP,type } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(404)
         .json({ success: false, message: `No partner with that id ${id}` });
     }
-    const updatedPartner = { name, headline, photo, links, isMVP };
+    const updatedPartner = { name, headline, photo, links, isMVP ,type};
     await Partner.findByIdAndUpdate(id, updatedPartner, {
       new: true,
       runValidators: true,
@@ -60,7 +61,7 @@ const updatePartner = async (req, res) => {
       updatedPartner,
     });
   } catch (error) {
-    res.status(409).json({ sucess: false, message: error.message });
+    res.status(409).json({ success: false, message: error.message });
   }
 };
 
