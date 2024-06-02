@@ -52,12 +52,6 @@ export const createBlog = async (req, res) => {
   try {
     const slug = title.toLowerCase().replace(/ /g, "-");
     const newBlog = new Blog({ title, slug, banner, content });
-    if (title.length > 30) {
-      return res.status(400).json({
-        success: false,
-        message: "Title should not exceed 30 characters",
-      });
-    }
     await newBlog.save();
     res.status(201).json({
       success: true,
