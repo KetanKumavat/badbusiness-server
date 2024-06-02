@@ -28,6 +28,7 @@ const createPartner = async (req, res) => {
     headline,
     photo,
     links,
+    type,
     isMVP,
     type
   });
