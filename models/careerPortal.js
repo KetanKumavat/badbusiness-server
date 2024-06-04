@@ -14,6 +14,12 @@ const careerPortalSchema = new mongoose.Schema({
       type: String,
     },
   ],
+  jobDescription: {
+    description: { type: String },
+    key_responsibilities: { type: String },
+    req_qualifications: { type: String },
+    preferred_qualifications: { type: String },
+  },
   link: {
     type: String,
     required: true,

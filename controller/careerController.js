@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 export const getCareers = async (req, res) => {
   try {
     const careers = await CareerPortal.find().select(
-      "jobTitle jobLocation jobType category link logo stipend datePosted"
+      "jobTitle jobLocation jobDescription jobType category link logo stipend datePosted"
     );
     res.status(200).json({ success: true, careers });
   } catch (error) {
@@ -17,7 +17,7 @@ export const getCareerById = async (req, res) => {
 
   try {
     const career = await CareerPortal.findById(id).select(
-      "jobTitle jobLocation jobType link logo stipend datePosted applications category"
+      "jobTitle jobLocation jobType jobDescription link logo stipend datePosted applications category"
     );
     res.status(200).json({ success: true, career });
   } catch (error) {
@@ -31,7 +31,9 @@ export const getCareerByCategory = async (req, res) => {
   try {
     const careers = await CareerPortal.find({
       category: category.toLowerCase(),
-    }).select("jobTitle jobLocation jobType link logo stipend category datePosted");
+    }).select(
+      "jobTitle jobLocation jobType jobDescription link logo stipend category datePosted"
+    );
     res.status(200).json({ success: true, careers });
   } catch (error) {
     res.status(404).json({ success: false, message: error.message });
@@ -39,13 +41,22 @@ export const getCareerByCategory = async (req, res) => {
 };
 
 export const createCareer = async (req, res) => {
-  const { jobTitle, jobLocation, jobType, link, category, logo, stipend } =
-    req.body;
+  const {
+    jobTitle,
+    jobLocation,
+    jobDescription,
+    jobType,
+    link,
+    category,
+    logo,
+    stipend,
+  } = req.body;
 
   const newCareer = new CareerPortal({
     jobTitle,
     jobLocation,
     jobType,
+    jobDescription,
     link,
     category: category.toLowerCase(),
     logo,
@@ -64,8 +75,16 @@ export const createCareer = async (req, res) => {
 
 export const updateCareer = async (req, res) => {
   const { id } = req.params;
-  const { jobTitle, jobLocation, jobType, category, link, logo, stipend } =
-    req.body;
+  const {
+    jobTitle,
+    jobLocation,
+    jobDescription,
+    jobType,
+    category,
+    link,
+    logo,
+    stipend,
+  } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No career with id: ${id}`);
@@ -74,6 +93,7 @@ export const updateCareer = async (req, res) => {
     jobTitle,
     jobLocation,
     jobType,
+    jobDescription,
     link,
     category,
     logo,
