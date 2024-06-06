@@ -16,7 +16,7 @@ const eventSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  date: { type: Date, default: "Coming Soon" },
+  date: { type: Date },
   time: { type: String, required: true },
   type: { type: String, required: true },
   platform: { type: String },
