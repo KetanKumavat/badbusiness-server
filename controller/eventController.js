@@ -104,7 +104,7 @@ export const createEvent = async (req, res) => {
     platform,
     venue,
     type,
-    sponsor,
+    sponsors,
     hosts,
     speakers,
     banner,
@@ -129,7 +129,7 @@ export const createEvent = async (req, res) => {
       type,
       listedBy,
       createdBy: userId,
-      sponsor,
+      sponsors,
       hosts,
       speakers,
       banner,
@@ -139,7 +139,7 @@ export const createEvent = async (req, res) => {
 
     const populatedEvent = await Event.findById(createdEvent._id)
       .populate("createdBy", "id username email")
-      .select("_id title description date time type listedBy status createdBy");
+      .select("_id title description date time type listedBy status createdBy sponsors hosts speakers banner venue platform");
     res.status(201).json({
       success: true,
       message: "Event added successfully",
@@ -163,7 +163,7 @@ export const updateEvent = async (req, res) => {
     venue,
     type,
     listedBy,
-    sponsor,
+    sponsors,
     hosts,
     speakers,
     banner,
@@ -185,7 +185,7 @@ export const updateEvent = async (req, res) => {
           type,
           listedBy,
           createdBy: userId,
-          sponsor,
+          sponsors,
           hosts,
           speakers,
           banner,
@@ -206,7 +206,7 @@ export const updateEvent = async (req, res) => {
           type,
           listedBy,
           createdBy: userId,
-          sponsor,
+          sponsors,
           hosts,
           speakers,
           banner,
